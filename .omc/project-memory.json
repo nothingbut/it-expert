@@ -1,0 +1,114 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1774353068966,
+  "projectRoot": "D:\\Workspace\\it-expert",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "docs"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 0,
+      "lastAccessed": 1774353068908,
+      "keyFiles": []
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "BASELINE.md",
+      "accessCount": 15,
+      "lastAccessed": 1774358414234,
+      "type": "file"
+    },
+    {
+      "path": "mac-mlx-deployment-plan.md",
+      "accessCount": 8,
+      "lastAccessed": 1774358325906,
+      "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "accessCount": 2,
+      "lastAccessed": 1774353225431,
+      "type": "file"
+    },
+    {
+      "path": "docs\\ai-hardware-comparison.md",
+      "accessCount": 2,
+      "lastAccessed": 1774357410136,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 1,
+      "lastAccessed": 1774353082087,
+      "type": "directory"
+    },
+    {
+      "path": "DEPLOYMENT-CHECKLIST.md",
+      "accessCount": 1,
+      "lastAccessed": 1774353082184,
+      "type": "file"
+    },
+    {
+      "path": "openclaw-installation-plan.md",
+      "accessCount": 1,
+      "lastAccessed": 1774353089170,
+      "type": "file"
+    },
+    {
+      "path": "playnite-requirements-temp.md",
+      "accessCount": 1,
+      "lastAccessed": 1774353089225,
+      "type": "file"
+    },
+    {
+      "path": "docs\\superpowers\\specs\\2026-03-24-playnite-gaming-frontend-design.md",
+      "accessCount": 1,
+      "lastAccessed": 1774353097907,
+      "type": "file"
+    },
+    {
+      "path": "unsloth-studio-installation-plan.md",
+      "accessCount": 1,
+      "lastAccessed": 1774353465496,
+      "type": "file"
+    },
+    {
+      "path": "docs\\mac-finetuning-tools-comparison.md",
+      "accessCount": 1,
+      "lastAccessed": 1774357505439,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

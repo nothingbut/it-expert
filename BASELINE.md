@@ -2,7 +2,7 @@
 
 > **文档用途**: 记录设备状态、系统配置和项目进度，作为环境管理的参考基准
 >
-> **最后更新**: 2026-03-23
+> **最后更新**: 2026-03-24
 >
 > **更新原则**: 每次系统变更、软件安装或配置修改后更新相应章节
 
@@ -61,7 +61,40 @@
 
 ---
 
-### 主设备 2: 联想 ThinkBook+
+### 主设备 2: M4 Mac mini
+
+#### 硬件配置
+| 项目 | 规格 | 状态 |
+|------|------|------|
+| 型号 | Mac mini (M4, 2024) | ✅ 正常 |
+| CPU | Apple M4 芯片 | ✅ 正常 |
+| 内存 | 32GB 统一内存 | ✅ 正常 |
+| 内置硬盘 | 256GB SSD | ✅ 正常 |
+| 外置硬盘 | 2TB SSD（扩展坞） | ✅ 正常 |
+
+#### 磁盘分区
+| 盘符 | 容量 | 来源 | 用途 | 已用 | 可用 | 使用率 |
+|------|------|------|------|------|------|--------|
+| 内置 | 256G | 内置 SSD | macOS 系统盘 | ? | ? | ? |
+| 外置 | 2T | USB/Thunderbolt 扩展坞 | AI 模型存储 + 数据 | ? | ? | ? |
+
+#### 操作系统
+| 项目 | 版本 | 状态 |
+|------|------|------|
+| OS | macOS Sequoia | ✅ 已安装 |
+| 版本号 | ? | 待确认 |
+| AI 框架 | MLX + vllm-mlx（纯 MLX 方案） | 🔄 待部署 |
+
+#### 角色定位
+| 角色 | 优先级 | 说明 |
+|------|--------|------|
+| AI 推理服务器 | 高 | 为本地网络提供大模型服务 |
+| Agent 服务节点 | 中 | 运行 OpenClaw like agent |
+| 开发测试环境 | 中 | 支持 Unsloth Studio 模型训练/微调 |
+
+---
+
+### 主设备 3: 联想 ThinkBook+
 
 #### 硬件配置
 | 项目 | 规格 | 状态 |
@@ -84,6 +117,24 @@
 |------|------|------|
 | OS | Windows 11 家庭版 | ✅ 已安装 |
 | 版本号 | ? | 待确认 |
+| AI 框架 | 可选（Ollama/LM Studio） | 🔄 待评估 |
+
+#### 角色定位
+| 角色 | 优先级 | 说明 |
+|------|--------|------|
+| 日常使用 | 高 | 主要工作笔记本 |
+| GPU 加速推理 | 中 | RTX 4060 可用于某些 AI 模型 |
+| 游戏娱乐 | 高 | 游戏 + 多媒体 |
+
+---
+
+### 设备角色总览
+
+| 设备 | 主要角色 | AI 能力 | 网络服务 |
+|------|----------|---------|----------|
+| 铭凡UM773 | 游戏前端 + NAS | 辅助 | 飞牛NAS |
+| M4 Mac mini | **AI 推理服务器** | **主力** | Ollama/LM Studio 服务 |
+| 联想 ThinkBook+ | 日常工作站 | 备用 | 可选推理服务 |
 
 ---
 
@@ -344,6 +395,31 @@ features:
 
 ## 变更历史
 
+### 2026-03-24
+- **[新增]** 添加 M4 Mac mini 设备记录（32GB 内存，256GB 内置 + 2TB 外置 SSD）
+- **[创建]** AI 硬件对比分析文档（ai-hardware-comparison.md）
+- **[评估]** M4 Mac mini vs RTX 4060 本地大模型性能对比
+- **[规划]** 确定 M4 Mac mini 作为主力 AI 服务器角色
+- **[架构]** 设计 Mac mini 为中心的 AI 服务网络拓扑
+
+### 2026-03-24
+- **[创建]** Mac Mini 纯 MLX AI 服务器部署方案 (mac-mlx-deployment-plan.md)
+  - 设计零 Ollama 依赖的 MLX 部署架构
+  - 配置 3 个模型服务（Qwen3.5-9B, OmniCoder-9B, GLM-OCR）
+  - 编写完整的启动/停止/监控脚本
+  - 提供 Claude Code 和 OpenClaw 客户端配置指南
+- **[创建]** Mac 小规模模型微调工具对比文档 (mac-finetuning-tools-comparison.md)
+  - 对比 Ollama、LM Studio、Unsloth Studio 在 Mac 上的微调能力
+  - 推荐 MLX 框架作为 Mac 微调的首选方案
+  - 提供 Swift MLX 性能优化建议
+- **[决策]** 确认 Mac Mini 采用纯 MLX 方案，不安装 Ollama
+  - 理由：更简洁、更高性能、原生微调支持
+  - 使用 vllm-mlx 获取 21-87% 性能提升
+- **[验证]** 确认 Claude Code 和 OpenClaw 可通过局域网访问 Mac Mini MLX 服务
+  - Claude Code：支持 OpenAI 兼容 API，配置简单
+  - OpenClaw：支持自定义 provider，配置中等难度
+- **[文档]** 更新基线文档，记录新增部署方案和决策
+
 ### 2026-03-23
 - **[创建]** 初始化基线文档
 - **[规划]** 创建 OpenClaw + ClawBot 部署计划
@@ -355,8 +431,11 @@ features:
 ## 附录
 
 ### 相关文档链接
-- [硬件配置详情](./memory/hardware-config.md)
+- [Mac Mini 纯 MLX AI 服务器部署方案](./mac-mlx-deployment-plan.md) ⭐ 新增
+- [Mac 小规模模型微调工具对比](./docs/mac-finetuning-tools-comparison.md)
+- [本地 AI 推理平台对比分析](./docs/ai-hardware-comparison.md)
 - [OpenClaw 安装方案](./openclaw-installation-plan.md)
+- [硬件配置详情](./memory/hardware-config.md)
 
 ### 命令快速参考
 
