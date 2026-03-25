@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "mcp__web-search-prime__web_search_prime",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "WebFetch(domain:github.com)"
     ]
   }
 }

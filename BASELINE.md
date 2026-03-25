@@ -82,15 +82,31 @@
 | 项目 | 版本 | 状态 |
 |------|------|------|
 | OS | macOS Sequoia | ✅ 已安装 |
-| 版本号 | ? | 待确认 |
-| AI 框架 | MLX + vllm-mlx（纯 MLX 方案） | 🔄 待部署 |
+| 版本号 | 15.0+ | 待确认 |
+| AI 框架 | **oMLX (推荐)** | 🔄 待部署 |
+| 备选方案 | MLX (研究用) | 可选 |
 
 #### 角色定位
 | 角色 | 优先级 | 说明 |
 |------|--------|------|
-| AI 推理服务器 | 高 | 为本地网络提供大模型服务 |
-| Agent 服务节点 | 中 | 运行 OpenClaw like agent |
-| 开发测试环境 | 中 | 支持 Unsloth Studio 模型训练/微调 |
+| AI 推理服务器 | 高 | 使用 oMLX 为局域网提供大模型 API 服务 |
+| 多模型服务 | 高 | 同时部署 Qwen3.5-9B (对话)、OmniCoder-9B (代码)、GLM-4V-9B (视觉) |
+| 统一 API 网关 | 高 | 提供 OpenAI + Anthropic 兼容接口 |
+| Agent 服务节点 | 中 | 支持 Claude Code、OpenClaw 等客户端 |
+| 开发测试环境 | 低 | 可选支持模型微调（MLX/Unsloth） |
+
+#### 部署方案
+| 方案 | 状态 | 部署时间 | 推荐度 |
+|------|------|----------|--------|
+| **oMLX** | 🔄 待部署 | 15-30 分钟 | ⭐⭐⭐⭐⭐ 强烈推荐 |
+| MLX 手动部署 | 备选 | 1-2 小时 | ⭐⭐ 研究用途 |
+
+#### 推荐模型配置
+| 模型 | 用途 | 大小 | 端口 |
+|------|------|------|------|
+| Qwen/Qwen2.5-9B-Instruct | 通用对话 | 18GB | 8080 |
+| Tesslate/OmniCoder-9B | 代码生成 | 18GB | 8080 |
+| THUDM/glm-4v-9b | 视觉/OCR | 19GB | 8080 |
 
 ---
 
@@ -130,11 +146,24 @@
 
 ### 设备角色总览
 
-| 设备 | 主要角色 | AI 能力 | 网络服务 |
-|------|----------|---------|----------|
-| 铭凡UM773 | 游戏前端 + NAS | 辅助 | 飞牛NAS |
-| M4 Mac mini | **AI 推理服务器** | **主力** | Ollama/LM Studio 服务 |
-| 联想 ThinkBook+ | 日常工作站 | 备用 | 可选推理服务 |
+| 设备 | 主要角色 | AI 能力 | 网络服务 | 客户端支持 |
+|------|----------|---------|----------|------------|
+| 铭凡UM773 | 游戏前端 + NAS | 辅助 | 飞牛NAS | OpenClaw (WSL2) |
+| **M4 Mac mini** | **AI 推理服务器** | **主力** | **oMLX (端口 8080)** | **局域网内所有设备** |
+| 联想 ThinkBook+ | 日常工作站 | 备用 | 可选推理服务 | Claude Code |
+
+#### AI 服务架构
+```
+M4 Mac mini (oMLX) - http://192.168.x.x:8080
+    |
+    +--- 通用对话: Qwen2.5-9B
+    +--- 代码生成: OmniCoder-9B
+    +--- 视觉/OCR: GLM-4V-9B
+    |
+    +--- API 兼容: OpenAI + Anthropic
+    +--- 性能优化: 持久化缓存 (40-100x 加速)
+    +--- 并发支持: 连续批处理 (6x 吞吐量)
+```
 
 ---
 
@@ -169,6 +198,106 @@
 ---
 
 ## 项目进度
+
+### M4 Mac mini oMLX AI 服务器部署项目
+
+#### 项目信息
+- **项目名称**: M4 Mac mini oMLX AI 服务器部署
+- **目标设备**: M4 Mac mini (32GB 内存)
+- **开始日期**: 2026-03-25
+- **预计完成**: 2026-03-25（1 小时内）
+- **当前状态**: 🔄 待开始
+- **部署方案**: oMLX (github.com/jundot/omlx)
+
+#### 阶段进度
+
+##### 阶段 1: 环境检查和准备（5 分钟）
+| 任务 | 状态 | 完成日期 | 备注 |
+|------|------|----------|------|
+| 1.1 检查 macOS 版本（需要 15.0+） | ⬜ 待开始 | - | sw_vers |
+| 1.2 检查内存（建议 32GB+） | ⬜ 待开始 | - | sysctl hw.memsize |
+| 1.3 检查磁盘空间（需要 100GB+） | ⬜ 待开始 | - | df -h |
+| 1.4 确认 Apple Silicon | ⬜ 待开始 | - | uname -m |
+| **阶段 1 完成度** | **0/4 (0%)** | - | |
+
+##### 阶段 2: 安装 oMLX（5 分钟）
+| 任务 | 状态 | 完成日期 | 备注 |
+|------|------|----------|------|
+| 2.1 下载 oMLX DMG | ⬜ 待开始 | - | 从 GitHub Releases |
+| 2.2 安装 oMLX 到 Applications | ⬜ 待开始 | - | 拖拽安装 |
+| 2.3 启动 oMLX 应用 | ⬜ 待开始 | - | open -a oMLX |
+| 2.4 验证服务启动 | ⬜ 待开始 | - | http://localhost:8080 |
+| **阶段 2 完成度** | **0/4 (0%)** | - | |
+
+##### 阶段 3: 模型下载（5 分钟配置 + 30-60 分钟下载）
+| 任务 | 状态 | 完成日期 | 备注 |
+|------|------|----------|------|
+| 3.1 访问 Web 管理界面 | ⬜ 待开始 | - | http://localhost:8080/admin |
+| 3.2 下载 Qwen2.5-9B-Instruct | ⬜ 待开始 | - | 18GB |
+| 3.3 下载 OmniCoder-9B | ⬜ 待开始 | - | 18GB |
+| 3.4 下载 GLM-4V-9B | ⬜ 待开始 | - | 19GB |
+| 3.5 验证模型加载 | ⬜ 待开始 | - | curl /v1/models |
+| **阶段 3 完成度** | **0/5 (0%)** | - | |
+
+##### 阶段 4: 网络配置（5 分钟）
+| 任务 | 状态 | 完成日期 | 备注 |
+|------|------|----------|------|
+| 4.1 获取 Mac mini IP 地址 | ⬜ 待开始 | - | ipconfig getifaddr en0 |
+| 4.2 配置防火墙允许局域网访问 | ⬜ 待开始 | - | 系统设置 |
+| 4.3 测试本地 API 访问 | ⬜ 待开始 | - | curl localhost:8080/v1/models |
+| 4.4 测试局域网 API 访问 | ⬜ 待开始 | - | 从其他设备测试 |
+| **阶段 4 完成度** | **0/4 (0%)** | - | |
+
+##### 阶段 5: 客户端配置（5-10 分钟）
+| 任务 | 状态 | 完成日期 | 备注 |
+|------|------|----------|------|
+| 5.1 配置联想 ThinkBook+ (Claude Code) | ⬜ 待开始 | - | 编辑 settings.json |
+| 5.2 配置铭凡UM773 (OpenClaw WSL2) | ⬜ 待开始 | - | 编辑 config.json |
+| 5.3 验证 Claude Code 连接 | ⬜ 待开始 | - | 测试对话 |
+| 5.4 验证 OpenClaw 连接 | ⬜ 待开始 | - | 测试对话 |
+| **阶段 5 完成度** | **0/4 (0%)** | - | |
+
+##### 阶段 6: 性能优化和自动启动（5 分钟）
+| 任务 | 状态 | 完成日期 | 备注 |
+|------|------|----------|------|
+| 6.1 配置 LRU 缓存 | ⬜ 待开始 | - | Web UI Settings |
+| 6.2 调整缓存大小 | ⬜ 待开始 | - | Hot: 8GB, Cold: 50GB |
+| 6.3 启用连续批处理 | ⬜ 待开始 | - | Web UI Settings |
+| 6.4 配置自动启动 | ⬜ 待开始 | - | 登录项 |
+| 6.5 运行性能测试 | ⬜ 待开始 | - | omlx benchmark |
+| **阶段 6 完成度** | **0/5 (0%)** | - | |
+
+#### 总体进度
+- **总任务数**: 26
+- **已完成**: 0
+- **进行中**: 0
+- **未开始**: 26
+- **总完成度**: **0%**
+- **预计部署时间**: **15-30 分钟**（不含模型下载）
+
+#### 关键配置参数
+```yaml
+# oMLX 配置
+server:
+  host: 0.0.0.0
+  port: 8080
+
+models:
+  max_loaded: 2           # 同时加载 2 个模型
+  ttl_minutes: 30         # 30 分钟不用自动卸载
+  lru_enabled: true       # 启用 LRU 缓存
+
+cache:
+  hot_tier_gb: 8          # RAM 缓存 8GB
+  cold_tier_gb: 50        # SSD 缓存 50GB
+  prefix_sharing: true    # 启用前缀共享
+
+performance:
+  max_batch_size: 8       # 批处理大小
+  continuous_batching: true
+```
+
+---
 
 ### OpenClaw + 腾讯 ClawBot 部署项目
 
@@ -336,29 +465,65 @@ features:
 互联网
    |
    |
-[路由器]
+[路由器] (192.168.x.1)
    |
-   +--- [铭凡UM773 小主机] (Windows 11)
+   +--- [M4 Mac mini] (192.168.x.x) - AI 推理服务器 ⭐
+   |       |
+   |       +--- [oMLX Server] - http://192.168.x.x:8080
+   |               |
+   |               +--- Qwen2.5-9B (通用对话)
+   |               +--- OmniCoder-9B (代码生成)
+   |               +--- GLM-4V-9B (视觉/OCR)
+   |
+   +--- [铭凡UM773 小主机] (192.168.x.x) (Windows 11)
    |       |
    |       +--- [Hyper-V] - 飞牛NAS (60G VM)
    |       |
    |       +--- [WSL2] (计划) - D:\WSL\Ubuntu
    |               |
    |               +--- [Docker]
-   |                       |
-   |                       +--- OpenClaw (port 8080)
-   |                       +--- PostgreSQL (port 5432)
-   |                       +--- Redis (port 6379)
+   |               |       |
+   |               |       +--- OpenClaw (port 8080)
+   |               |       +--- PostgreSQL (port 5432)
+   |               |       +--- Redis (port 6379)
+   |               |
+   |               +--- [客户端] OpenClaw → 访问 Mac mini oMLX
    |
-   +--- [联想 ThinkBook+] (Windows 11)
+   +--- [联想 ThinkBook+] (192.168.x.x) (Windows 11)
+           |
+           +--- [客户端] Claude Code → 访问 Mac mini oMLX
+```
+
+#### API 访问路径
+```
+联想 ThinkBook+ (Claude Code)
+    ↓
+    HTTP 请求: POST http://192.168.x.x:8080/v1/chat/completions
+    ↓
+M4 Mac mini (oMLX Server)
+    ↓
+    模型推理: Qwen2.5-9B / OmniCoder-9B / GLM-4V-9B
+    ↓
+    HTTP 响应: JSON (OpenAI 兼容格式)
+    ↓
+联想 ThinkBook+ (Claude Code)
 ```
 
 ### IP 地址分配（待确认）
-| 设备 | IP 地址 | 子网掩码 | 网关 |
-|------|---------|----------|------|
-| 铭凡UM773 | ? | ? | ? |
-| 联想 ThinkBook+ | ? | ? | ? |
-| WSL2 (Ubuntu) | 动态分配 | - | - |
+| 设备 | IP 地址 | 子网掩码 | 网关 | oMLX 端口 |
+|------|---------|----------|------|-----------|
+| **M4 Mac mini** | ? | ? | ? | **8080** |
+| 铭凡UM773 | ? | ? | ? | - |
+| 联想 ThinkBook+ | ? | ? | ? | - |
+| WSL2 (Ubuntu) | 动态分配 | - | - | - |
+
+#### 服务端口分配
+| 设备 | 服务 | 端口 | 协议 | 外部访问 |
+|------|------|------|------|----------|
+| M4 Mac mini | oMLX API | 8080 | HTTP | ✅ 局域网 |
+| M4 Mac mini | oMLX Admin | 8080/admin | HTTP | ✅ 局域网 |
+| 铭凡UM773 | OpenClaw | 8080 | HTTP | ⬜ 计划 |
+| 铭凡UM773 | 飞牛NAS | ? | HTTP | ⬜ 待确认 |
 
 ---
 
@@ -394,6 +559,31 @@ features:
 ---
 
 ## 变更历史
+
+### 2026-03-25
+- **[决策]** 确定 M4 Mac mini 使用 **oMLX** 作为 AI 服务器部署方案 ⭐
+  - 理由：开箱即用（15-30 分钟部署），持久化缓存（40-100x 加速），连续批处理（6x 吞吐量）
+  - 对比 MLX 手动部署节省 1-2 小时初始开发 + 月均 4-8 小时维护成本
+- **[创建]** MLX vs oMLX 详细对比分析文档 (docs/mlx-vs-omlx-comparison.md)
+  - 7 大核心对比维度：推理控制、算法实现、架构扩展、数据流、集成、性能调优、研究
+  - 决策矩阵：oMLX 在易用性、部署时间、维护成本上优势明显
+  - MLX 灵活性优势仅在研究和特殊场景下有价值（<5% 使用场景）
+- **[创建]** Mac Mini oMLX 部署方案文档 (mac-omlx-deployment-plan.md)
+  - 完整部署流程：6 个阶段，26 个任务，预计 15-30 分钟完成
+  - 推荐模型配置：Qwen2.5-9B、OmniCoder-9B、GLM-4V-9B
+  - 客户端配置指南：Claude Code、OpenClaw、Python SDK
+- **[创建]** MLX 灵活性深度分析文档 (docs/mlx-flexibility-deep-dive.md)
+  - 详细说明 MLX 在底层控制、实验算法、模型扩展等方面的优势
+  - 提供 Tree of Thoughts、Speculative Decoding、MoE 路由等实现示例
+  - 明确 MLX 适用场景：研究、特殊集成、极致性能优化
+- **[架构]** 更新网络拓扑图，M4 Mac mini 作为中心 AI 服务器
+  - oMLX 统一端口 8080，提供 OpenAI + Anthropic 兼容 API
+  - 支持局域网内所有设备访问（联想 ThinkBook+、铭凡UM773）
+- **[配置]** 定义 oMLX 推荐配置参数
+  - 缓存：Hot Tier 8GB (RAM) + Cold Tier 50GB (SSD)
+  - 性能：连续批处理（批次大小 8）、前缀共享
+  - 模型管理：LRU 缓存、TTL 30 分钟、最多同时加载 2 个模型
+- **[文档]** 更新 BASELINE.md，添加 M4 Mac mini oMLX 部署项目进度跟踪
 
 ### 2026-03-24
 - **[新增]** 添加 M4 Mac mini 设备记录（32GB 内存，256GB 内置 + 2TB 外置 SSD）
@@ -431,11 +621,21 @@ features:
 ## 附录
 
 ### 相关文档链接
-- [Mac Mini 纯 MLX AI 服务器部署方案](./mac-mlx-deployment-plan.md) ⭐ 新增
-- [Mac 小规模模型微调工具对比](./docs/mac-finetuning-tools-comparison.md)
-- [本地 AI 推理平台对比分析](./docs/ai-hardware-comparison.md)
-- [OpenClaw 安装方案](./openclaw-installation-plan.md)
-- [硬件配置详情](./memory/hardware-config.md)
+
+#### M4 Mac mini AI 服务器部署（推荐方案）⭐
+- **[快速部署指南 (QUICKSTART)](./QUICKSTART-OMLX.md)** - 5 步快速部署，适合直接执行 🚀
+- **[Mac Mini oMLX 完整部署方案](./mac-omlx-deployment-plan.md)** - 详细部署流程和配置说明
+- [MLX vs oMLX 详细对比](./docs/mlx-vs-omlx-comparison.md) - 方案选型决策依据
+- [MLX 灵活性深度分析](./docs/mlx-flexibility-deep-dive.md) - MLX 优势场景说明
+
+#### 备选方案和工具对比
+- [Mac Mini 纯 MLX 部署方案](./mac-mlx-deployment-plan.md) - 手动部署方案（研究用途）
+- [Mac 小规模模型微调工具对比](./docs/mac-finetuning-tools-comparison.md) - Unsloth/MLX 微调
+- [本地 AI 推理平台对比分析](./docs/ai-hardware-comparison.md) - 硬件选型
+
+#### 其他项目
+- [OpenClaw 安装方案](./openclaw-installation-plan.md) - 铭凡UM773 WSL2 部署
+- [硬件配置详情](./memory/hardware-config.md) - 设备详细配置
 
 ### 命令快速参考
 

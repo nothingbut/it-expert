@@ -6,7 +6,10 @@
 
 这是一个**纯文档仓库**，用于跟踪 IT 基础设施项目和游戏系统部署。仓库记录了硬件清单、软件安装计划、部署流程以及个人 IT 项目的进度。
 
-**目标设备**: 铭凡UM773 小主机（AMD 7735, 64GB RAM, 2TB SSD）
+**目标设备**:
+- **M4 Mac mini** (32GB, Apple Silicon) - AI 推理服务器 ⭐
+- 铭凡UM773 小主机（AMD 7735, 64GB RAM, 2TB SSD）- 游戏前端 + NAS
+- 联想 ThinkBook+（Intel Ultra 155H, RTX 4060）- 日常工作站
 
 **主要语言**: 中文（简体）
 
@@ -46,7 +49,46 @@
   - 存储结构规划
   - 内存分配策略（Hyper-V + WSL2 + 游戏）
 
+- **QUICKSTART-OMLX.md** - M4 Mac mini oMLX 快速部署指南 ⭐ 新增
+  - 5 步快速部署流程（15-30 分钟）
+  - 系统要求检查脚本
+  - 模型下载和配置
+  - 客户端配置（Claude Code、OpenClaw）
+  - 性能优化和自动启动
+  - 常见问题故障排除
+
+- **mac-omlx-deployment-plan.md** - Mac Mini oMLX 完整部署方案 ⭐ 新增
+  - 详细部署流程（6 个阶段，26 个任务）
+  - 推荐模型配置（Qwen3.5-9B、OmniCoder-9B、GLM-4V-9B）
+  - 网络配置和局域网访问
+  - 性能优化建议
+  - 监控和管理工具
+  - 预计部署时间：15-30 分钟（不含模型下载）
+
 ### 设计规范
+
+- **docs/mlx-vs-omlx-comparison.md** - MLX vs oMLX 详细对比分析 ⭐ 新增
+  - 快速决策矩阵（9 个核心维度对比）
+  - 架构对比（MLX 自建 vs oMLX 开箱即用）
+  - 7 大功能对比（服务部署、模型管理、上下文缓存等）
+  - 成本对比（开发成本、维护成本）
+  - 性能测试结果（实际场景数据）
+  - 推荐方案：oMLX（99% 场景）
+
+- **docs/mlx-flexibility-deep-dive.md** - MLX 灵活性深度分析 ⭐ 新增
+  - MLX 7 大核心优势详解
+  - 实验性推理算法实现示例（Tree of Thoughts、Speculative Decoding、MoE）
+  - 自定义模型架构扩展
+  - 底层性能调优技巧
+  - 何时选择 MLX（研究、特殊集成、极致性能）
+  - 混合方案建议（先 oMLX 验证，需要时迁移 MLX）
+
+- **mac-mlx-deployment-plan.md** - Mac Mini 纯 MLX 手动部署方案（备选）
+  - 零 Ollama 依赖的 MLX 架构
+  - 手动编写启动/停止/监控脚本
+  - 自定义 API 服务器实现
+  - 适用场景：研究、深度定制、学习目的
+  - 部署时间：1-2 小时（手动开发）
 
 - **docs/superpowers/specs/2026-03-24-playnite-gaming-frontend-design.md** - 综合设计文档（27k+ tokens）
   - 统一游戏前端的完整系统架构
@@ -58,15 +100,23 @@
 
 ## 项目背景
 
-本仓库跟踪两个主要部署项目：
+本仓库跟踪三个主要部署项目：
 
-1. **Playnite 游戏前端** - 带模拟器支持的统一游戏中心
+1. **M4 Mac mini AI 服务器** - 局域网 AI 推理服务 ⭐ 优先级最高
+  - 部署方案：oMLX (github.com/jundot/omlx)
+  - 统一 API 网关：提供 OpenAI + Anthropic 兼容接口
+  - 多模型服务：Qwen3.5-9B (对话)、OmniCoder-9B (代码)、GLM-4V-9B (视觉)
+  - 性能优化：持久化缓存（40-100x 加速）+ 连续批处理（6x 吞吐量）
+  - 客户端支持：Claude Code、OpenClaw、Python SDK
+  - 部署时间：15-30 分钟（不含模型下载）
+
+2. **Playnite 游戏前端** - 带模拟器支持的统一游戏中心
   - 全屏启动器，Xbox/PlayStation 风格界面
   - 模拟器支持：RetroArch、PCSX2、Dolphin、Ryujinx、DuckStation、Citra、RPCS3
   - 客厅模式自动启动配置
   - 集成应用：Edge 浏览器、网易云音乐、哔哩哔哩、极空间
 
-2. **OpenClaw + ClawBot** - 基于 WSL2 的开发环境
+3. **OpenClaw + ClawBot** - 基于 WSL2 的开发环境
   - WSL2 Ubuntu 安装在 D 盘（与现有 Hyper-V 虚拟机共存）
   - 基于 Docker 的部署
   - 腾讯 ClawBot 集成实现聊天机器人功能
@@ -74,16 +124,26 @@
 
 ## 硬件配置
 
-**主要设备：铭凡UM773**
+**主要设备 1：M4 Mac mini** ⭐ AI 服务器
+- CPU：Apple M4 芯片（10 核 CPU，10 核 GPU）
+- 内存：32GB 统一内存
+- 存储：256GB 内置 SSD + 2TB 外置 SSD（扩展坞）
+- 网络：千兆以太网 + Wi-Fi 6E
+- 部署：oMLX AI 服务器（端口 8080）
+- 服务：Qwen3.5-9B、OmniCoder-9B、GLM-4V-9B
+
+**主要设备 2：铭凡UM773** - 游戏前端 + NAS
 - CPU：AMD 7735（8 核 16 线程）
 - 内存：64GB DDR5 4800
 - 存储：500GB M.2 SSD（C: Windows 系统）+ 2TB SATA SSD（E: 数据盘）
 - 虚拟化：已启用 Hyper-V（飞牛NAS 虚拟机，60GB）
+- 客户端：OpenClaw (WSL2) → 访问 Mac mini oMLX
 
-**次要设备：联想 ThinkBook+**
+**主要设备 3：联想 ThinkBook+** - 日常工作站
 - CPU：Intel Core Ultra 155H
 - GPU：NVIDIA RTX 4060（8GB 显存）
 - 存储：1TB M.2 SSD + 4TB M.2 SSD
+- 客户端：Claude Code → 访问 Mac mini oMLX
 
 ## 在此仓库中工作
 
