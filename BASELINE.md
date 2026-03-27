@@ -41,8 +41,8 @@
 
 **D盘空间分配**:
 - Hyper-V 虚拟机（飞牛NAS）: 60G
-- WSL2 + OpenClaw (计划): 40-55G
-- 预留空间: ~45-55G
+- WSL2 + OpenClaw (计划): ~17GB（Node.js 方式更轻量）
+- 预留空间: ~123GB
 
 #### 操作系统
 | 项目 | 版本 | 状态 |
@@ -192,8 +192,8 @@ M4 Mac mini (oMLX) - http://192.168.x.x:8080
 |------|------|----------|------|
 | WSL2 内核 | - | - | ⬜ 未安装 |
 | Ubuntu | 24.04 LTS (计划) | D:\WSL\Ubuntu | ⬜ 未安装 |
-| Docker | Latest (计划) | - | ⬜ 未安装 |
-| OpenClaw | - | ~/projects/openclaw | ⬜ 未安装 |
+| Node.js | 24 (计划) | - | ⬜ 未安装 |
+| OpenClaw | v2026.3.24 | npm global | ⬜ 未安装 |
 
 ---
 
@@ -299,10 +299,17 @@ performance:
 
 ---
 
-### OpenClaw + 腾讯 ClawBot 部署项目
+### OpenClaw 部署项目
+
+#### OpenClaw 版本信息
+- **当前版本**: v2026.3.24（2026-03-25发布）
+- **安装方式**: npm global + onboard wizard
+- **需要**: Node.js 24（推荐）或 22.16+
+- **文档**: openclaw-installation-plan-updated.md
+- **官方文档**: https://docs.openclaw.ai/start/getting-started
 
 #### 项目信息
-- **项目名称**: OpenClaw + 腾讯 ClawBot 部署
+- **项目名称**: OpenClaw 部署
 - **目标设备**: 铭凡UM773 小主机
 - **开始日期**: 2026-03-23
 - **预计完成**: 待定
@@ -310,7 +317,7 @@ performance:
 
 #### 阶段进度
 
-##### 阶段 1: WSL2 配置到 D 盘
+##### 阶段 1: WSL2 准备（如已安装跳过）
 | 任务 | 状态 | 完成日期 | 备注 |
 |------|------|----------|------|
 | 1.1 启用 WSL 功能 | ⬜ 待开始 | - | |
@@ -324,49 +331,122 @@ performance:
 | 1.9 创建用户并配置 | ⬜ 待开始 | - | |
 | **阶段 1 完成度** | **0/9 (0%)** | - | |
 
-##### 阶段 2: 安装 OpenClaw
+##### 阶段 2: Node.js 24 安装
 | 任务 | 状态 | 完成日期 | 备注 |
 |------|------|----------|------|
-| 2.1 更新 Ubuntu 系统 | ⬜ 待开始 | - | |
-| 2.2 安装基础依赖 | ⬜ 待开始 | - | |
-| 2.3 安装 Docker | ⬜ 待开始 | - | |
-| 2.4 配置 Docker 权限 | ⬜ 待开始 | - | |
-| 2.5 克隆 OpenClaw 仓库 | ⬜ 待开始 | - | 需要仓库地址 |
-| 2.6 配置 OpenClaw | ⬜ 待开始 | - | |
-| 2.7 创建数据目录 | ⬜ 待开始 | - | |
-| 2.8 启动 Docker Compose | ⬜ 待开始 | - | |
-| 2.9 验证服务运行 | ⬜ 待开始 | - | |
-| **阶段 2 完成度** | **0/9 (0%)** | - | |
+| 2.1 更新 Ubuntu 系统 | ⬜ 待开始 | - | sudo apt update && sudo apt upgrade |
+| 2.2 安装 Node.js 24 | ⬜ 待开始 | - | 使用 nvm 或官方仓库 |
+| 2.3 验证 Node.js 版本 | ⬜ 待开始 | - | node --version |
+| 2.4 验证 npm 版本 | ⬜ 待开始 | - | npm --version |
+| **阶段 2 完成度** | **0/4 (0%)** | - | |
 
-##### 阶段 3: 集成腾讯 ClawBot
+##### 阶段 3: OpenClaw 安装（npm global）
 | 任务 | 状态 | 完成日期 | 备注 |
 |------|------|----------|------|
-| 3.1 获取 ClawBot 凭证 | ⬜ 待开始 | - | 需要腾讯云账号 |
-| 3.2 安装 ClawBot SDK | ⬜ 待开始 | - | |
-| 3.3 配置 ClawBot 连接 | ⬜ 待开始 | - | |
-| 3.4 创建环境变量文件 | ⬜ 待开始 | - | |
-| 3.5 更新 Docker Compose | ⬜ 待开始 | - | |
-| 3.6 重启服务 | ⬜ 待开始 | - | |
-| 3.7 验证 ClawBot 连接 | ⬜ 待开始 | - | |
-| **阶段 3 完成度** | **0/7 (0%)** | - | |
+| 3.1 全局安装 OpenClaw | ⬜ 待开始 | - | npm install -g openclaw |
+| 3.2 验证安装 | ⬜ 待开始 | - | openclaw --version |
+| **阶段 3 完成度** | **0/2 (0%)** | - | |
 
-##### 阶段 4: 网络配置和外部访问
+##### 阶段 4: 配置引导（openclaw onboard）
 | 任务 | 状态 | 完成日期 | 备注 |
 |------|------|----------|------|
-| 4.1 配置端口转发 | ⬜ 待开始 | - | |
-| 4.2 配置防火墙规则 | ⬜ 待开始 | - | |
-| 4.3 创建自动转发脚本 | ⬜ 待开始 | - | |
-| 4.4 配置计划任务 | ⬜ 待开始 | - | |
-| 4.5 （可选）配置 Nginx | ⬜ 待开始 | - | |
-| 4.6 验证外部访问 | ⬜ 待开始 | - | |
-| **阶段 4 完成度** | **0/6 (0%)** | - | |
+| 4.1 运行配置引导 | ⬜ 待开始 | - | openclaw onboard --install-daemon |
+| 4.2 配置 oMLX 连接 | ⬜ 待开始 | - | 输入 Mac mini oMLX 地址 |
+| 4.3 验证配置文件 | ⬜ 待开始 | - | cat ~/.openclaw/config.yaml |
+| **阶段 4 完成度** | **0/3 (0%)** | - | |
+
+##### 阶段 5: 连接 oMLX
+| 任务 | 状态 | 完成日期 | 备注 |
+|------|------|----------|------|
+| 5.1 测试 oMLX 连接 | ⬜ 待开始 | - | curl Mac mini oMLX API |
+| 5.2 启动 OpenClaw Gateway | ⬜ 待开始 | - | openclaw start 或 daemon 启动 |
+| 5.3 验证服务运行 | ⬜ 待开始 | - | http://localhost:18789 |
+| 5.4 测试对话功能 | ⬜ 待开始 | - | OpenClaw CLI 测试 |
+| **阶段 5 完成度** | **0/4 (0%)** | - | |
 
 #### 总体进度
-- **总任务数**: 31
+- **总任务数**: 22
 - **已完成**: 0
 - **进行中**: 0
-- **未开始**: 31
+- **未开始**: 22
 - **总完成度**: **0%**
+
+---
+
+### 远程桌面部署项目
+
+#### 项目信息
+- **项目名称**: 联想 ThinkBook+ 远程访问铭凡 UM773
+- **目标**: 日常操作 + 偶尔游戏 + 局域网/远程访问
+- **开始日期**: 2026-03-27
+- **预计完成**: 2026-03-27（20-35 分钟）
+- **当前状态**: 🔄 待开始
+
+#### 方案架构
+```
+联想 ThinkBook+ (客户端) → 铭凡 UM773 (服务端)
+    |
+    +--- 主方案：Windows RDP (日常操作 90%)
+    +--- 辅助方案：Parsec (游戏场景 5%)
+    +--- 远程访问：Tailscale VPN (外网访问 5%)
+```
+
+#### 阶段进度
+
+##### 阶段 1: Windows RDP 配置（P0 - 必须）
+| 任务 | 状态 | 完成日期 | 备注 |
+|------|------|----------|------|
+| 1.1 启用远程桌面（铭凡） | ⬜ 待开始 | - | 设置 → 系统 → 远程桌面 |
+| 1.2 配置 NLA 身份验证 | ⬜ 待开始 | - | 安全性增强 |
+| 1.3 获取铭凡 IP 地址 | ⬜ 待开始 | - | ipconfig |
+| 1.4 测试 RDP 服务 | ⬜ 待开始 | - | Test-NetConnection |
+| 1.5 客户端连接测试（ThinkBook+） | ⬜ 待开始 | - | mstsc |
+| 1.6 安装 Microsoft Remote Desktop | ⬜ 待开始 | - | Microsoft Store |
+| 1.7 创建连接配置 | ⬜ 待开始 | - | 保存凭据 |
+| 1.8 创建桌面快捷方式 | ⬜ 待开始 | - | .rdp 文件 |
+| **阶段 1 完成度** | **0/8 (0%)** | - | |
+
+##### 阶段 2: Parsec 游戏串流（P1 - 推荐）
+| 任务 | 状态 | 完成日期 | 备注 |
+|------|------|----------|------|
+| 2.1 下载安装 Parsec（铭凡） | ⬜ 待开始 | - | https://parsec.app |
+| 2.2 注册并登录账号 | ⬜ 待开始 | - | 免费账号 |
+| 2.3 配置 Hosting 设置 | ⬜ 待开始 | - | 1080p 60fps |
+| 2.4 验证 Hosting 状态 | ⬜ 待开始 | - | Ready to Host |
+| 2.5 安装客户端（ThinkBook+） | ⬜ 待开始 | - | 同账号登录 |
+| 2.6 局域网连接测试 | ⬜ 待开始 | - | 自动发现 |
+| 2.7 配置快捷键 | ⬜ 待开始 | - | Ctrl+Alt+Shift+D |
+| 2.8 游戏性能测试 | ⬜ 待开始 | - | 延迟 < 10ms |
+| **阶段 2 完成度** | **0/8 (0%)** | - | |
+
+##### 阶段 3: Tailscale VPN（P2 - 可选）
+| 任务 | 状态 | 完成日期 | 备注 |
+|------|------|----------|------|
+| 3.1 下载安装 Tailscale（铭凡） | ⬜ 待开始 | - | https://tailscale.com |
+| 3.2 登录并连接 | ⬜ 待开始 | - | 选择登录方式 |
+| 3.3 记录 Tailscale IP | ⬜ 待开始 | - | 100.x.x.x |
+| 3.4 安装客户端（ThinkBook+） | ⬜ 待开始 | - | 同账号登录 |
+| 3.5 验证 VPN 连接 | ⬜ 待开始 | - | tailscale status |
+| 3.6 测试 Ping 连通性 | ⬜ 待开始 | - | ping 100.x.x.x |
+| 3.7 RDP 通过 VPN 连接 | ⬜ 待开始 | - | mstsc 100.x.x.x |
+| **阶段 3 完成度** | **0/7 (0%)** | - | |
+
+#### 总体进度
+- **总任务数**: 23（核心 8 + 可选 15）
+- **已完成**: 0
+- **进行中**: 0
+- **未开始**: 23
+- **总完成度**: **0%**
+
+#### 验收标准
+| 测试项 | 目标 | 状态 |
+|--------|------|------|
+| RDP 局域网连接 | < 10ms 延迟 | ⬜ 待测试 |
+| RDP 桌面显示 | 流畅清晰 | ⬜ 待测试 |
+| RDP 剪贴板 | 双向复制 | ⬜ 待测试 |
+| Parsec 游戏延迟 | < 10ms | ⬜ 待测试 |
+| Parsec 帧率 | 60fps | ⬜ 待测试 |
+| Tailscale VPN | 稳定连接 | ⬜ 待测试 |
 
 ---
 
@@ -393,52 +473,80 @@ networkingMode=NAT             # 网络模式
 - **WSL 版本**: 2
 - **默认用户**: clawuser
 
-### OpenClaw 配置（计划值）
+### OpenClaw 配置（v2026.3.24）
 
-#### config.yaml
+#### 配置文件位置
+- **配置文件**: ~/.openclaw/config.yaml
+- **数据目录**: ~/.openclaw/workspace/
+- **日志目录**: ~/.openclaw/logs/
+
+#### config.yaml 示例
 ```yaml
+models:
+  providers:
+    - id: omlx-local
+      type: openai
+      baseURL: http://192.168.x.x:8000/v1
+      apiKey: "2348"
+
 server:
+  port: 18789
   host: "0.0.0.0"
-  port: 8080
-
-database:
-  type: "postgresql"
-  host: "localhost"
-  port: 5432
-  database: "openclaw"
-  user: "clawuser"
-  password: "[待设置]"
-
-storage:
-  type: "local"
-  path: "/mnt/d/openclaw-data"
 ```
 
-#### 数据目录
-- **Windows 路径**: D:\openclaw-data
-- **WSL 路径**: /mnt/d/openclaw-data
-- **子目录**:
-  - postgres: 数据库数据
-  - redis: 缓存数据
-  - logs: 应用日志
-  - backups: 备份文件
+#### 说明
+- **模型提供商**: 连接到 Mac mini oMLX 服务器
+- **API Key**: 使用 oMLX 配置的密钥
+- **端口**: 默认 18789（v2026.3.24 改为此端口）
 
-### ClawBot 配置（待获取）
+### 远程桌面配置（计划值）
 
-#### 凭证信息
-| 项目 | 值 | 状态 |
-|------|------|------|
-| App ID | [待获取] | ⬜ 未配置 |
-| App Key | [待获取] | ⬜ 未配置 |
-| Secret Key | [待获取] | ⬜ 未配置 |
-| Bot Token | [待获取] | ⬜ 未配置 |
+#### Windows RDP 配置
+```ini
+# 服务端（铭凡 UM773）
+远程桌面：启用
+网络级别身份验证（NLA）：启用
+端口：3389（默认）
+防火墙规则：允许远程桌面
 
-#### 功能配置
+# 客户端（联想 ThinkBook+）
+连接地址：192.168.x.x（局域网）或 100.x.x.x（VPN）
+分辨率：1920x1080 或全屏
+颜色深度：32 位
+连接速度：LAN (10 Mbps 或更高)
+```
+
+#### Parsec 配置
 ```yaml
-features:
-  auto_reply: true
-  command_handling: true
-  file_upload: true
+# 服务端（铭凡 UM773）
+hosting:
+  enabled: true
+  resolution: 1920x1080
+  fps: 60
+  bandwidth_limit: 50mbps
+  h265_enabled: true
+  hardware_decode: true
+
+# 连接方式
+局域网：自动发现（P2P）
+远程：自动穿透（无需端口转发）
+端口：UDP 8000-8010（自动选择）
+```
+
+#### Tailscale VPN 配置
+```
+# 网络模式
+模式：Peer-to-peer + DERP 中继
+协议：WireGuard
+加密：端到端加密
+
+# IP 分配
+铭凡 UM773：100.x.x.x（自动分配）
+联想 ThinkBook+：100.y.y.y（自动分配）
+
+# 访问方式
+RDP：mstsc /v:100.x.x.x
+Parsec：自动通过 VPN 连接
 ```
 
 ### 网络配置（计划值）
@@ -446,14 +554,16 @@ features:
 #### 端口转发规则
 | 服务 | WSL2 端口 | Windows 端口 | 协议 | 状态 |
 |------|-----------|--------------|------|------|
-| OpenClaw | 8080 | 8080 | TCP | ⬜ 未配置 |
-| PostgreSQL | 5432 | - | TCP | 内部使用 |
-| Redis | 6379 | - | TCP | 内部使用 |
+| OpenClaw Gateway | 18789 | 18789 | TCP | ⬜ 未配置 |
+| Windows RDP | - | 3389 | TCP | ⬜ 未配置 |
+| Parsec | - | UDP 8000-8010 | UDP | ⬜ 未配置 |
 
 #### 防火墙规则
 | 规则名称 | 端口 | 方向 | 操作 | 状态 |
 |----------|------|------|------|------|
-| WSL2 OpenClaw | 8080 | Inbound | Allow | ⬜ 未配置 |
+| WSL2 OpenClaw | 18789 | Inbound | Allow | ⬜ 未配置 |
+| 远程桌面 | 3389 | Inbound | Allow | ⬜ 未配置 |
+| Parsec | 8000-8010 | Inbound | Allow | ⬜ 未配置 |
 
 ---
 
@@ -481,11 +591,9 @@ features:
    |       |
    |       +--- [WSL2] (计划) - D:\WSL\Ubuntu
    |               |
-   |               +--- [Docker]
+   |               +--- [Node.js 24]
    |               |       |
-   |               |       +--- OpenClaw (port 8080)
-   |               |       +--- PostgreSQL (port 5432)
-   |               |       +--- Redis (port 6379)
+   |               |       +--- OpenClaw Gateway (port 18789)
    |               |
    |               +--- [客户端] OpenClaw → 访问 Mac mini oMLX
    |
@@ -522,7 +630,9 @@ M4 Mac mini (oMLX Server)
 |------|------|------|------|----------|
 | M4 Mac mini | oMLX API | 8080 | HTTP | ✅ 局域网 |
 | M4 Mac mini | oMLX Admin | 8080/admin | HTTP | ✅ 局域网 |
-| 铭凡UM773 | OpenClaw | 8080 | HTTP | ⬜ 计划 |
+| 铭凡UM773 | OpenClaw Gateway | 18789 | HTTP | ⬜ 计划 |
+| 铭凡UM773 | 远程桌面 (RDP) | 3389 | TCP | ⬜ 计划 |
+| 铭凡UM773 | Parsec 游戏串流 | 8000-8010 | UDP | ⬜ 可选 |
 | 铭凡UM773 | 飞牛NAS | ? | HTTP | ⬜ 待确认 |
 
 ---
@@ -543,9 +653,8 @@ M4 Mac mini (oMLX Server)
 | INFO-002 | E盘使用情况 | 需要确认已用空间和可用空间 | 低 | ⬜ 待确认 |
 | INFO-003 | Windows 版本号 | 需要确认详细版本号和构建号 | 低 | ⬜ 待确认 |
 | INFO-004 | AMD-V 状态 | 需要确认BIOS中是否已启用 | 中 | ⬜ 待确认 |
-| INFO-005 | OpenClaw 仓库地址 | 需要确认官方仓库地址 | 高 | ⬜ 待确认 |
+| INFO-005 | OpenClaw npm 包 | v2026.3.24 已确认可通过 npm 全局安装 | 低 | ✅ 已确认 |
 | INFO-006 | 网络IP地址 | 需要确认两台设备的IP地址 | 低 | ⬜ 待确认 |
-| INFO-007 | 腾讯云账号 | 需要确认是否有腾讯云账号 | 高 | ⬜ 待确认 |
 
 ### 风险清单
 
@@ -554,11 +663,51 @@ M4 Mac mini (oMLX Server)
 | RISK-001 | D盘空间不足 | 中 | 低 | 定期清理+监控磁盘使用 | ⬜ 待实施 |
 | RISK-002 | WSL2 与 Hyper-V 冲突 | 高 | 低 | Win11已支持共存，验证后确认 | ⬜ 待验证 |
 | RISK-003 | 内存资源竞争 | 中 | 中 | 限制WSL2内存为20G，监控使用率 | ⬜ 待实施 |
-| RISK-004 | ClawBot 凭证丢失 | 高 | 低 | 使用环境变量+备份.env文件 | ⬜ 待实施 |
 
 ---
 
 ## 变更历史
+
+### 2026-03-27
+- **[新增]** 远程桌面部署项目 ⭐
+  - 目标：联想 ThinkBook+ 远程访问铭凡 UM773
+  - 主方案：Windows RDP（日常操作 90%）
+  - 辅助方案：Parsec（游戏场景 5%）
+  - 远程访问：Tailscale VPN（外网访问 5%）
+  - 预计部署时间：20-35 分钟
+- **[创建]** 远程桌面方案对比文档（docs/remote-desktop-solutions.md）
+  - 6 种方案详细对比（RDP、Parsec、Moonlight、Rustdesk、ToDesk、向日葵）
+  - 快速决策矩阵（日常操作、游戏性能、局域网、远程访问）
+  - 性能对比（延迟、带宽、CPU 占用、画质）
+  - 使用场景推荐和成本分析
+- **[创建]** 远程桌面部署计划（remote-desktop-deployment-plan.md）
+  - 3 个阶段详细部署步骤（RDP、Parsec、Tailscale）
+  - 23 个任务清单（核心 8 + 可选 15）
+  - 验收测试标准（延迟、帧率、功能测试）
+  - 日常使用指南和故障排除
+- **[配置]** 更新网络配置参数
+  - 添加 RDP 端口 3389
+  - 添加 Parsec 端口 UDP 8000-8010
+  - 添加防火墙规则配置
+- **[更新]** OpenClaw 部署方案升级到 v2026.3.24 ⭐
+  - 安装方式从 Docker 改为 npm global + onboard wizard
+  - 删除腾讯 ClawBot SDK（官方已移除该功能）
+  - 添加 Node.js 24 依赖要求
+  - 默认端口从 8080 改为 18789
+  - 配置文件从 Docker compose 改为 ~/.openclaw/config.yaml
+- **[优化]** WSL2 + OpenClaw 空间估算从 40-55GB 降低到 ~17GB
+  - Node.js 方式比 Docker 方式更轻量
+  - D 盘预留空间增加到 ~123GB
+- **[更新]** 部署流程简化为 5 个阶段（从原 4 阶段）
+  - 阶段1: WSL2 准备（如已安装跳过）
+  - 阶段2: Node.js 24 安装
+  - 阶段3: OpenClaw 安装（npm global）
+  - 阶段4: 配置引导（openclaw onboard）
+  - 阶段5: 连接 oMLX
+- **[清理]** 删除过时的待确认信息和风险项
+  - 删除腾讯云账号确认项
+  - 删除 ClawBot 凭证风险项
+  - 更新 OpenClaw 仓库地址为 npm 包确认
 
 ### 2026-03-25
 - **[决策]** 确定 M4 Mac mini 使用 **oMLX** 作为 AI 服务器部署方案 ⭐
@@ -633,8 +782,14 @@ M4 Mac mini (oMLX Server)
 - [Mac 小规模模型微调工具对比](./docs/mac-finetuning-tools-comparison.md) - Unsloth/MLX 微调
 - [本地 AI 推理平台对比分析](./docs/ai-hardware-comparison.md) - 硬件选型
 
+#### 远程桌面项目
+- **[快速开始指南 (QUICKSTART)](./QUICKSTART-REMOTE-DESKTOP.md)** - 5 分钟快速配置 RDP 🚀
+- **[远程桌面方案对比](./docs/remote-desktop-solutions.md)** - 6 种方案详细对比和选型 🖥️
+- **[远程桌面部署计划](./remote-desktop-deployment-plan.md)** - 3 阶段部署流程，20-35 分钟完成
+
 #### 其他项目
 - [OpenClaw 安装方案](./openclaw-installation-plan.md) - 铭凡UM773 WSL2 部署
+- [OpenClaw 更新安装方案](./openclaw-installation-plan-updated.md) - v2026.3.24 新版本
 - [硬件配置详情](./memory/hardware-config.md) - 设备详细配置
 
 ### 命令快速参考
@@ -691,3 +846,27 @@ ipconfig /all
 **文档版本**: v1.0
 **维护者**: IT 团队
 **审阅周期**: 每周或每次重大变更后
+
+---
+
+## oMLX部署记录（2026-03-26）
+
+### 部署信息
+- **设备**: MacBook Pro M3 Pro (36GB)
+- **oMLX版本**: v0.2.21 (Homebrew)
+- **部署状态**: ✅ 成功
+- **服务地址**: http://localhost:8000
+- **API Key**: 2348
+
+### 已部署模型
+| 模型 | 大小 | 用途 | 状态 |
+|------|------|------|------|
+| Qwen3.5-0.8B | 1.71GB | 通用对话/微调 | ✅ |
+| OmniCoder-9B | 18.40GB | 代码生成 | ✅ |
+| GLM-OCR | 2.59GB | OCR识别 | ✅ |
+
+### 相关文档
+- [实际部署记录](./OMLX-DEPLOYMENT-ACTUAL.md) - 完整部署经验
+- [快速指南](./QUICKSTART-OMLX.md) - 快速部署参考
+- [使用指南](./OMLX-USAGE-GUIDE.md) - API使用说明
+
