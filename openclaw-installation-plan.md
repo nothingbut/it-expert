@@ -1,10 +1,19 @@
-# OpenClaw + 腾讯 ClawBot 安装方案
+# ⚠️ 过时文档 - OpenClaw + 腾讯 ClawBot 安装方案
 
-## 环境概述
+> **状态**: ❌ **已过时** - OpenClaw 在 v2026.3.24 进行了重大升级
+>
+> **请查看最新文档**: [openclaw-installation-plan-updated.md](./openclaw-installation-plan-updated.md)
+>
+> **更新日期**: 2026-03-27
+> **原因**: 官方不再推荐 Docker 方式，改用 `openclaw onboard` 命令行安装
+
+---
+
+## 环境概述（历史参考）
 - **目标机器**: 铭凡UM773 小主机
 - **系统**: Windows 11 专业版
 - **安装位置**: D盘（200G，已有60G Hyper-V虚拟机）
-- **方案**: WSL2 + Ubuntu 容器
+- **方案**: WSL2 + Ubuntu 容器（此方案已过时）
 
 ## 前置检查
 
