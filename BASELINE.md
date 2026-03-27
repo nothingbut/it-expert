@@ -83,30 +83,43 @@
 |------|------|------|
 | OS | macOS Sequoia | ✅ 已安装 |
 | 版本号 | 15.0+ | 待确认 |
-| AI 框架 | **oMLX (推荐)** | 🔄 待部署 |
-| 备选方案 | MLX (研究用) | 可选 |
+| AI 框架 | **oMLX** | ✅ 已部署 |
+| 安装方式 | DMG + Homebrew | ✅ 已安装 |
 
 #### 角色定位
 | 角色 | 优先级 | 说明 |
 |------|--------|------|
 | AI 推理服务器 | 高 | 使用 oMLX 为局域网提供大模型 API 服务 |
-| 多模型服务 | 高 | 同时部署 Qwen3.5-9B (对话)、OmniCoder-9B (代码)、GLM-4V-9B (视觉) |
-| 统一 API 网关 | 高 | 提供 OpenAI + Anthropic 兼容接口 |
+| 多模型服务 | 高 | 已部署 4 个模型（对话、代码、视觉、嵌入） |
+| 统一 API 网关 | 高 | 提供 OpenAI 兼容 API 接口 |
 | Agent 服务节点 | 中 | 支持 Claude Code、OpenClaw 等客户端 |
 | 开发测试环境 | 低 | 可选支持模型微调（MLX/Unsloth） |
 
 #### 部署方案
 | 方案 | 状态 | 部署时间 | 推荐度 |
 |------|------|----------|--------|
-| **oMLX** | 🔄 待部署 | 15-30 分钟 | ⭐⭐⭐⭐⭐ 强烈推荐 |
+| **oMLX DMG** | ✅ 已部署 | 15-30 分钟 | ⭐⭐⭐⭐⭐ 强烈推荐 |
 | MLX 手动部署 | 备选 | 1-2 小时 | ⭐⭐ 研究用途 |
 
-#### 推荐模型配置
-| 模型 | 用途 | 大小 | 端口 |
+#### 实际部署模型
+| 模型 | 用途 | 大小 | 状态 |
 |------|------|------|------|
-| Qwen/Qwen2.5-9B-Instruct | 通用对话 | 18GB | 8080 |
-| Tesslate/OmniCoder-9B | 代码生成 | 18GB | 8080 |
-| THUDM/glm-4v-9b | 视觉/OCR | 19GB | 8080 |
+| Qwen3.5-0.8B | 通用对话（轻量） | 1.71GB | ✅ 已加载 |
+| OmniCoder-9B | 代码生成 | 18.40GB | ✅ 已加载 |
+| GLM-OCR | 视觉/OCR | 2.59GB | ✅ 已加载 |
+| **nomic-embed-4bit** | **文本嵌入** | **0.08GB** | ✅ 已加载 |
+
+#### oMLX 服务配置
+| 配置项 | 值 | 说明 |
+|--------|-----|------|
+| 服务地址 | http://0.0.0.0:8000 | 局域网可访问 |
+| Web 管理界面 | http://localhost:8000/admin/chat | 图形化管理 |
+| API 端点 | http://localhost:8000/v1 | OpenAI 兼容 |
+| API Key | `2348` | 认证密钥 |
+| 模型目录 | `/Users/shichang/models` | 模型存储路径 |
+| 最大内存 | 25.92GB | 自动配置 |
+| 缓存启用 | ✅ 是 | 持久化缓存 |
+| 量化 | 4-bit | 节省内存 |
 
 ---
 
@@ -154,15 +167,31 @@
 
 #### AI 服务架构
 ```
-M4 Mac mini (oMLX) - http://192.168.x.x:8080
+M4 Mac mini (oMLX) - http://192.168.x.x:8000
     |
-    +--- 通用对话: Qwen2.5-9B
-    +--- 代码生成: OmniCoder-9B
-    +--- 视觉/OCR: GLM-4V-9B
+    +--- 通用对话: Qwen3.5-0.8B (1.71GB)
+    +--- 代码生成: OmniCoder-9B (18.40GB)
+    +--- 视觉/OCR: GLM-OCR (2.59GB)
+    +--- 文本嵌入: nomic-embed-4bit (0.08GB) ⭐ 新增
     |
-    +--- API 兼容: OpenAI + Anthropic
-    +--- 性能优化: 持久化缓存 (40-100x 加速)
-    +--- 并发支持: 连续批处理 (6x 吞吐量)
+    +--- API 兼容: OpenAI 格式
+    +--- Web 界面: http://localhost:8000/admin/chat
+    +--- API Key: 2348
+    +--- 性能优化: 持久化缓存 + 4-bit 量化
+    +--- 内存优化: TurboQuant (73-79% 减少)
+```
+
+**客户端访问示例**:
+```bash
+# 对话 API
+curl http://192.168.x.x:8000/v1/chat/completions \
+  -H "Authorization: Bearer 2348" \
+  -d '{"model": "Qwen3.5-0.8B", "messages": [...]}'
+
+# 嵌入 API
+curl http://192.168.x.x:8000/v1/embeddings \
+  -H "Authorization: Bearer 2348" \
+  -d '{"model": "nomic-embed-4bit", "input": "..."}'
 ```
 
 ---
@@ -669,6 +698,35 @@ M4 Mac mini (oMLX Server)
 ## 变更历史
 
 ### 2026-03-27
+- **[部署]** M4 Mac mini oMLX AI 服务器配置完成 ⭐⭐⭐
+  - 安装方式：Homebrew (`brew install omlx`)
+  - 服务地址：http://0.0.0.0:8000
+  - Web 管理界面：http://localhost:8000/admin/chat
+  - API Key：`2348`
+  - 已部署 4 个模型（总计 22.78GB）：
+    - Qwen3.5-0.8B (1.71GB) - 通用对话
+    - OmniCoder-9B (18.40GB) - 代码生成
+    - GLM-OCR (2.59GB) - 视觉/OCR
+    - **nomic-embed-4bit (0.08GB) - 文本嵌入** ⭐ 新增
+- **[新增]** 嵌入模型支持
+  - 模型：mlx-community/nomicai-modernbert-embed-base-4bit
+  - 维度：768
+  - 量化：4-bit（内存占用仅 80MB）
+  - 用途：语义搜索、RAG、文本分类、去重检测
+  - API 端点：`POST /v1/embeddings`
+  - 测试状态：✅ 已验证（返回正确的 768 维向量）
+- **[更新]** oMLX 配置优化
+  - 监听地址：0.0.0.0（局域网可访问）
+  - 端口：8000（从默认 8080 改为 8000）
+  - 模型目录：/Users/shichang/models
+  - 最大内存：25.92GB（自动配置）
+  - 缓存：已启用（持久化 SSD 缓存）
+  - 量化：4-bit（TurboQuant 技术，减少 73-79% 内存）
+- **[创建]** oMLX 部署文档
+  - docs/omlx-quick-reference.md - 快速参考指南
+  - docs/omlx-embedding-models.md - 嵌入模型配置指南
+  - scripts/omlx-diagnose.sh - 环境诊断脚本
+  - scripts/omlx-embedding-client.py - Python 客户端示例
 - **[新增]** 远程桌面部署项目 ⭐
   - 目标：联想 ThinkBook+ 远程访问铭凡 UM773
   - 主方案：Windows RDP（日常操作 90%）
